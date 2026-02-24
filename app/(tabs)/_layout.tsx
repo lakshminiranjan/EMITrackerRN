@@ -1,35 +1,67 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
+import { Redirect, Tabs } from "expo-router";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <>
+      <SignedIn>
+        <Tabs
+          screenOptions={{
+            headerShown: false, // 🔥 removes top page name
+            tabBarActiveTintColor: "#1976D2",
+            tabBarInactiveTintColor: "#777",
+            tabBarStyle: {
+              height: 60,
+              paddingBottom: 6,
+            },
+          }}
+        >
+          <Tabs.Screen
+            name="dashboard"
+            options={{
+              title: "Dashboard",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="grid-outline" size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="emi"
+            options={{
+              title: "EMI",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="cash-outline" size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="analytics"
+            options={{
+              title: "Analytics",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="stats-chart-outline" size={size} color={color} />
+              ),
+            }}
+          />
+
+          <Tabs.Screen
+            name="profile"
+            options={{
+              title: "Profile",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="person-outline" size={size} color={color} />
+              ),
+            }}
+          />
+        </Tabs>
+      </SignedIn>
+
+      <SignedOut>
+        <Redirect href="../(auth)/sign-in" />
+      </SignedOut>
+    </>
   );
 }
